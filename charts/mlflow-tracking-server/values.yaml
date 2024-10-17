@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/kharkevich
   name: mlflow-tracking-server
-  tag: 2.17.0-202410150044
+  tag: 2.17.0-202410170509
 
 oidc:
   enabled: true
