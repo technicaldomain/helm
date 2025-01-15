@@ -9,7 +9,7 @@ metadata:
 rules:
 - apiGroups: [""]
   resources: ["secrets", "events"]
-  verbs: ["get", "list", "watch", "update", "create", "delete"]
+  verbs: ["get", "list", "watch", "update", "create", "delete", "patch"]
 - apiGroups: ["githubapp.kharkevich.org"]
   resources: ["argocdrepos", "dockerconfigjsons"]
   verbs: ["get", "list", "watch", "update", "patch", "create", "delete"]
