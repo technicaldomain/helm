@@ -2,7 +2,7 @@ apiVersion: v2
 name: github-app-jwt2token-controller
 description: GitHub App JWT to Token Kubernetes Controller
 type: application
-version: 1.0.3
+version: 1.0.4
 appVersion: "1.0.0"
 home: https://github.com/kharkevich/helm
 sources:

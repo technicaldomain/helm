@@ -8,7 +8,7 @@ metadata:
     {{- include "common.labels.standard" . | nindent 4 }}
 rules:
 - apiGroups: [""]
-  resources: ["secrets"]
+  resources: ["secrets", "events"]
   verbs: ["get", "list", "watch", "update", "create", "delete"]
 - apiGroups: ["githubapp.kharkevich.org"]
   resources: ["argocdrepos", "dockerconfigjsons"]
