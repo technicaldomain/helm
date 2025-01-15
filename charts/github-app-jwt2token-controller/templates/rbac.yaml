@@ -15,7 +15,7 @@ rules:
   verbs: ["get", "list", "watch", "update", "patch", "create", "delete"]
 - apiGroups: ["githubapp.kharkevich.org"]
   resources: ["argocdrepos/status", "dockerconfigjsons/status"]
-  verbs: ["update"]
+  verbs: ["get", "list", "watch", "update", "patch", "create", "delete"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
