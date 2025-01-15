@@ -1,0 +1,16 @@
+image:
+  registry: ghcr.io/kharkevich
+  name: github-app-jwt2token-controller
+  tag: 1.0.0
+
+healthCheck:
+  liveness:
+    disabled: true
+  readiness:
+    disabled: true
+  startup:
+    disabled: true
+
+
+serviceAccount:
+  create: true

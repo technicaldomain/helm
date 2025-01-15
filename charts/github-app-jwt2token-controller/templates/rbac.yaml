@@ -1,0 +1,34 @@
+{{- $fullName := include "common.fullname" . -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch", "update", "create", "delete"]
+- apiGroups: ["githubapp.kharkevich.org"]
+  resources: ["argocdrepos", "dockerconfigjsons"]
+  verbs: ["get", "list", "watch", "update", "patch", "create", "delete"]
+- apiGroups: ["githubapp.kharkevich.org"]
+  resources: ["argocdrepos/status", "dockerconfigjsons/status"]
+  verbs: ["update"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $fullName }}
+subjects:
+- kind: ServiceAccount
+  name: {{ $fullName }}
+  namespace: {{ .Release.Namespace }}
