@@ -1,7 +1,7 @@
 image:
   registry: ghcr.io/kharkevich
   name: github-app-jwt2token-controller
-  tag: 1.1.1
+  tag: 1.1.2
   pullSecretsEnabled: false
 
 healthCheck:
