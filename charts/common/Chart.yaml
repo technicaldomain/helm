@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: 1.0.0
+description: Common helm library
+home: https://github.com/kharkevich/helm
+type: library
+maintainers:
+  - email: Alexander_Kharkevich@outlook.com
+    name: Alexander Kharkevich
+name: common
+version: 2.1.2
