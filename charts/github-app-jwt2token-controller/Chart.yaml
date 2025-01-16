@@ -2,7 +2,7 @@ apiVersion: v2
 name: github-app-jwt2token-controller
 description: GitHub App JWT to Token Kubernetes Controller
 type: application
-version: 1.1.0
+version: 1.1.1
 appVersion: "1.0.0"
 home: https://github.com/kharkevich/helm
 sources:
@@ -15,4 +15,4 @@ maintainers:
 dependencies:
   - name: common
     repository: https://kharkevich.github.io/helm-generic/
-    version: 2.1.1
+    version: 2.1.2
