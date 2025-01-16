@@ -22,7 +22,7 @@ jobs:
       - name: Get list of Helm charts
         id: chart-list
         run: |
-          charts=$(find ./charts -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
+          charts=$(find ./charts -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | grep -v '^common$')
           echo "charts=$(echo "$charts" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
   validate:
