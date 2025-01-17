@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  common:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-01-17T01:01:35.086514526Z"
+    description: Common helm library
+    digest: 99b69c7a0b675b49f0f51ac5b61fe3902f1ac00a88cd54205c8e8da403949096
+    home: https://github.com/kharkevich/helm
+    maintainers:
+    - email: Alexander_Kharkevich@outlook.com
+      name: Alexander Kharkevich
+    name: common
+    type: library
+    urls:
+    - https://github.com/technicaldomain/helm/releases/download/common-2.1.2/common-2.1.2.tgz
+    version: 2.1.2
+generated: "2025-01-17T01:01:35.086522641Z"
