@@ -5,15 +5,15 @@ icon: https://raw.githubusercontent.com/mlflow/mlflow/master/assets/logo.svg
 type: application
 version: 1.0.0
 appVersion: "2.17.0"
-home: https://github.com/kharkevich/helm
+home: https://github.com/technicaldomain/helm
 sources:
-  - https://github.com/kharkevich/helm
-  - https://github.com/kharkevich/mlflow-tracking-server
+  - https://github.com/technicaldomain/helm
+  - https://github.com/technicaldomain/mlflow-tracking-server
 maintainers:
   - email: alex@kharkevich.org
     name: Alexander Kharkevich
 
 dependencies:
   - name: common
-    repository: https://kharkevich.github.io/helm-generic/
-    version: 2.1.0
+    repository: https://technicaldomain.github.io/helm/
+    version: 2.1.3

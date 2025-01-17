@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/kharkevich
+  registry: ghcr.io/technicaldomain
   name: mlflow-tracking-server
   tag: 2.17.0-202410170509
 

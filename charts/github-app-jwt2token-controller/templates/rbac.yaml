@@ -10,7 +10,7 @@ rules:
 - apiGroups: [""]
   resources: ["secrets", "events"]
   verbs: ["get", "list", "watch", "update", "create", "delete", "patch"]
-- apiGroups: ["githubapp.kharkevich.org"]
+- apiGroups: ["githubapp.technicaldomain.xyz"]
   resources: ["*"]
   verbs: ["*"]
 ---

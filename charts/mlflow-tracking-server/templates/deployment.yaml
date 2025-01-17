@@ -11,7 +11,7 @@ spec:
           - name: {{ default "http" $config.applicationName }}
             containerPort: {{ default "8080" $config.port }}
             protocol: TCP
-          image: "{{ default "ghcr.io/kharkevich" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          image: "{{ default "ghcr.io/technicaldomain" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
           command: ["mlflow"]
           args:

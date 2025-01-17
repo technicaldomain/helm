@@ -1,11 +1,11 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: argocdrepos.githubapp.kharkevich.org
+  name: argocdrepos.githubapp.technicaldomain.xyz
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  group: githubapp.kharkevich.org
+  group: githubapp.technicaldomain.xyz
   versions:
     - name: v1
       served: true
@@ -46,11 +46,11 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: dockerconfigjsons.githubapp.kharkevich.org
+  name: dockerconfigjsons.githubapp.technicaldomain.xyz
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  group: githubapp.kharkevich.org
+  group: githubapp.technicaldomain.xyz
   versions:
     - name: v1
       served: true
@@ -97,11 +97,11 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: ghss.githubapp.kharkevich.org
+  name: ghss.githubapp.technicaldomain.xyz
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  group: githubapp.kharkevich.org
+  group: githubapp.technicaldomain.xyz
   versions:
     - name: v1
       served: true
