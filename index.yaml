@@ -29,4 +29,49 @@ entries:
     urls:
     - https://github.com/technicaldomain/helm/releases/download/common-2.1.2/common-2.1.2.tgz
     version: 2.1.2
-generated: "2025-01-17T01:29:27.849415786Z"
+  github-app-jwt2token-controller:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-01-17T01:38:09.607977547Z"
+    dependencies:
+    - name: common
+      repository: https://technicaldomain.github.io/helm/
+      version: 2.1.3
+    description: GitHub App JWT to Token Kubernetes Controller
+    digest: f8d1dc8587423b7f3630fa4be3b8ee2a69d7949d4b94b29d47b739510a5a6566
+    home: https://github.com/technicaldomain/helm
+    maintainers:
+    - email: alex@kharkevich.org
+      name: Alexander Kharkevich
+    name: github-app-jwt2token-controller
+    sources:
+    - https://github.com/technicaldomain/helm
+    - https://github.com/technicaldomain/github-app-jwt2token-controller
+    type: application
+    urls:
+    - https://github.com/technicaldomain/helm/releases/download/github-app-jwt2token-controller-1.1.2/github-app-jwt2token-controller-1.1.2.tgz
+    version: 1.1.2
+  mlflow-tracking-server:
+  - apiVersion: v2
+    appVersion: 2.17.0
+    created: "2025-01-17T01:38:09.714327005Z"
+    dependencies:
+    - name: common
+      repository: https://technicaldomain.github.io/helm/
+      version: 2.1.3
+    description: A Helm chart for MlFlow Tracking Server
+    digest: 914da7e7f2177be2e5b92b17b6b196675454d12d104ad77dfdbaea7410411914
+    home: https://github.com/technicaldomain/helm
+    icon: https://raw.githubusercontent.com/mlflow/mlflow/master/assets/logo.svg
+    maintainers:
+    - email: alex@kharkevich.org
+      name: Alexander Kharkevich
+    name: mlflow-tracking-server
+    sources:
+    - https://github.com/technicaldomain/helm
+    - https://github.com/technicaldomain/mlflow-tracking-server
+    type: application
+    urls:
+    - https://github.com/technicaldomain/helm/releases/download/mlflow-tracking-server-1.0.0/mlflow-tracking-server-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-01-17T01:38:09.7143348Z"
