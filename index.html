@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helm Chart Repository</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        section {
+            background: #fff;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        pre {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Helm Chart Repository</h1>
+    </header>
+    <main>
+        <section>
+            <h2>About</h2>
+            <p>This repository contains Helm charts for deploying various applications. Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.</p>
+        </section>
+        <section>
+            <h2>Get Started</h2>
+            <p>To get started with our Helm charts, visit our <a href="https://github.com/technicaldomain/helm">GitHub repository</a>.</p>
+            <p>The charts can be added using the following command:</p>
+            <pre><code>helm repo add technicaldomain https://technicaldomain.github.io/helm</code></pre>
+            <p>OCI repository is also supported:</p>
+            <pre><code>helm repo add technicaldomain oci://ghcr.io/technicaldomain/helm</code></pre>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Technical Domain. All rights reserved.</p>
+    </footer>
+</body>
+</html>
