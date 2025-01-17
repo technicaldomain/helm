@@ -4,7 +4,7 @@
 {{- $lifecycle := default (dict) .Values.lifecycle -}}
 {{- $healthCheck := default (dict) .Values.healthCheck -}}
 name: app
-image: "{{ default "ghcr.io/kharkevich" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+image: "{{ default "ghcr.io/technicaldomain" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
 imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
 ports:
 - name: {{ default "http" $config.applicationName }}
