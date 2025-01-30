@@ -21,9 +21,7 @@ Any valid hook may be passed in. Separate multiple hooks with a ",".
 {{- $extended := default (dict) .Values.solution -}}
 {{- $lifecycle := default (dict) .Values.lifecycle -}}
 {{- $configmapTemplate := (print $.Template.BasePath "/configmap.yaml") -}}
-{{- if hasKey (dict $.Template.Templates) $configmapTemplate -}}
 checksum/config: {{ include $configmapTemplate . | sha256sum | trunc 63}}
-{{- end -}}
 {{- $prometheus := default (dict) .Values.prometheus -}}
 {{- if $prometheus }}
 prometheus.io/scrape: "true"
