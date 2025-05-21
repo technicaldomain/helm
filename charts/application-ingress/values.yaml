@@ -1,0 +1,36 @@
+---
+# ingressClass: nginx
+
+solution:
+  component: ingress
+
+servicePort: 80
+
+hosts: []
+  # - "cluster.example.com"
+
+explicitTLS:
+
+services: {}
+  # - name: serviceA
+  #   port: 8081
+  #   useRewrite: true
+  #   contextPath:
+  #     - /
+  # - name: serviceB
+  #   ingressClass: nginx
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  #     nginx.ingress.kubernetes.io/use-regex: "false"
+  #   contextPath:
+  #     - /serviceB
+
+# use rewrites
+# useRewrite: true
+# services:
+#   - name: frontend
+#     contextPath:
+#       - ()(/.*)
+#   - name: api
+#     contextPath:
+#       - (/api)(/.*)
