@@ -65,6 +65,28 @@ entries:
     urls:
     - https://github.com/technicaldomain/helm/releases/download/github-app-jwt2token-controller-1.1.2/github-app-jwt2token-controller-1.1.2.tgz
     version: 1.1.2
+  ingress:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-05-21T04:42:31.179250685Z"
+    dependencies:
+    - name: common
+      repository: https://technicaldomain.github.io/helm/
+      version: 2.1.4
+    description: A Helm chart for Ingress
+    digest: 0a1827173615af38040583ff8b753d9a684eda1f3b995fa5c6a33630244b2508
+    home: https://github.com/technicaldomain/helm
+    icon: file://icon.png
+    maintainers:
+    - email: alex@kharkevich.org
+      name: Alexander Kharkevich
+    name: ingress
+    sources:
+    - https://github.com/technicaldomain/helm
+    type: application
+    urls:
+    - https://github.com/technicaldomain/helm/releases/download/ingress-1.1.1/ingress-1.1.1.tgz
+    version: 1.1.1
   mlflow-tracking-server:
   - apiVersion: v2
     appVersion: 2.17.0
@@ -88,4 +110,4 @@ entries:
     urls:
     - https://github.com/technicaldomain/helm/releases/download/mlflow-tracking-server-1.0.0/mlflow-tracking-server-1.0.0.tgz
     version: 1.0.0
-generated: "2025-01-30T19:47:52.7949003Z"
+generated: "2025-05-21T04:42:31.179260594Z"
