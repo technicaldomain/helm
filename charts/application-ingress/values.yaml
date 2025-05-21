@@ -9,9 +9,7 @@ servicePort: 80
 hosts: []
   # - "cluster.example.com"
 
-# Indicates whether TLS should be explicitly enabled for the ingress. 
-# Expected type: boolean. If omitted, TLS will not be explicitly configured.
-explicitTLS: false
+explicitTLS:
 
 services: {}
   # - name: serviceA
