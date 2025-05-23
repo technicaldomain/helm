@@ -68,6 +68,27 @@ entries:
   ingress:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2025-05-23T23:23:04.134137743Z"
+    dependencies:
+    - name: common
+      repository: https://technicaldomain.github.io/helm/
+      version: 2.1.4
+    description: A Helm chart for Ingress
+    digest: 55f45240c0b4097bd30753226d7acfc60372f9c563c0475b6da172a537dbf058
+    home: https://github.com/technicaldomain/helm
+    icon: file://icon.png
+    maintainers:
+    - email: alex@kharkevich.org
+      name: Alexander Kharkevich
+    name: ingress
+    sources:
+    - https://github.com/technicaldomain/helm
+    type: application
+    urls:
+    - https://github.com/technicaldomain/helm/releases/download/ingress-1.1.2/ingress-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2025-05-21T04:42:31.179250685Z"
     dependencies:
     - name: common
@@ -110,4 +131,4 @@ entries:
     urls:
     - https://github.com/technicaldomain/helm/releases/download/mlflow-tracking-server-1.0.0/mlflow-tracking-server-1.0.0.tgz
     version: 1.0.0
-generated: "2025-05-21T04:42:31.179260594Z"
+generated: "2025-05-23T23:23:04.134155776Z"
