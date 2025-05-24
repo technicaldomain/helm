@@ -22,9 +22,8 @@
 {{- if $.Values.explicitTLS }}
 {{- $_ := set $defaultAnnotations "traefik.ingress.kubernetes.io/router.tls" "true" }}
 {{- $_ := set $defaultAnnotations "traefik.ingress.kubernetes.io/router.entrypoints" "websecure" }}
-{{- else }}
-{{- $_ := set $defaultAnnotations "traefik.ingress.kubernetes.io/router.entrypoints" "web" }}
 {{- end }}
+{{- $_ := set $defaultAnnotations "traefik.ingress.kubernetes.io/router.entrypoints" "web" }}
 {{- if (default $useRewrite false) }}
 {{- $_ := set $defaultAnnotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-rewrite" $serviceName) }}
 {{- end }}
