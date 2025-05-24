@@ -1,6 +1,7 @@
 {{- $fullName := include "common.fullname" . }}
 {{- $appLabels := include "common.labels.standard" . -}}
 {{- range .Values.services }}
+{{- $pathType := .pathType | default "Prefix" }}
 {{- $contextPath := .contextPath }}
 {{- $serviceName := .name }}
 {{- $servicePort := .port | default 80 }}
@@ -53,7 +54,7 @@ spec:
         paths:
         {{- range $contextPath }}
           - path: {{ . }}
-            pathType: Prefix
+            pathType: {{ $pathType }}
             backend:
               service:
                 name: {{ $serviceName }}
