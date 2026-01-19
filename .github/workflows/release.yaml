@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -36,7 +36,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release Helm Charts
-        uses: helm/chart-releaser-action@v1.6.0
+        uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
           skip_existing: true
@@ -51,6 +51,6 @@ jobs:
               if [ -z "${pkg:-}" ]; then
                 break
               fi
-              helm push "${pkg}" oci://ghcr.io/technicaldomain/helm
+              helm push "${pkg}" oci://ghcr.io/${{ github.repository_owner }}/helm
             done
           fi
