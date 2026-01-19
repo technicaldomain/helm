@@ -3,6 +3,20 @@ entries:
   common:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-01-19T18:26:34.125553275Z"
+    description: Common helm library
+    digest: 76a603559f76d17150bef6f4d2e64172858bcea87b21d9b5dc4192b37407d2fa
+    home: https://github.com/technicaldomain/helm
+    maintainers:
+    - email: alex@kharkevich.org
+      name: Alexander Kharkevich
+    name: common
+    type: library
+    urls:
+    - https://github.com/technicaldomain/helm/releases/download/common-2.1.5/common-2.1.5.tgz
+    version: 2.1.5
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-01-30T19:47:52.794888709Z"
     description: Common helm library
     digest: 1cc33185fe5647455290da4b40a295456a1db78fcd262da1d82221e8b28cbeef
@@ -215,4 +229,4 @@ entries:
     urls:
     - https://github.com/technicaldomain/helm/releases/download/mlflow-tracking-server-1.0.0/mlflow-tracking-server-1.0.0.tgz
     version: 1.0.0
-generated: "2025-05-24T22:01:56.678306181Z"
+generated: "2026-01-19T18:26:34.125591907Z"
