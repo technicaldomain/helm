@@ -20,10 +20,20 @@ Any valid hook may be passed in. Separate multiple hooks with a ",".
 {{- define "common.annotations.deployment" -}}
 {{- $extended := default (dict) .Values.solution -}}
 {{- $lifecycle := default (dict) .Values.lifecycle -}}
+{{- $configmap := default (dict) .Values.configmap -}}
+{{- $configmapChecksumEnabled := false -}}
+{{- if hasKey $configmap "checksumEnabled" -}}
+{{-   $configmapChecksumEnabled = $configmap.checksumEnabled -}}
+{{- end -}}
+{{- if $configmapChecksumEnabled }}
 {{- $configmapTemplate := (print $.Template.BasePath "/configmap.yaml") -}}
-checksum/config: {{ include $configmapTemplate . | sha256sum | trunc 63}}
+checksum/config: {{ include $configmapTemplate . | sha256sum | trunc 63 }}
+{{- end }}
+{{- range $name, $tpl := .Values.checksumAnnotations }}
+checksum/{{ $name }}: {{ include $tpl $ | sha256sum | trunc 63 }}
+{{- end }}
 {{- $prometheus := default (dict) .Values.prometheus -}}
-{{- if $prometheus }}
+{{- if .Values.prometheus }}
 prometheus.io/scrape: "true"
 prometheus.io/path: "{{ default "/actuator/prometheus" $prometheus.path }}"
 prometheus.io/port: "{{ default "8080" $prometheus.port }}"

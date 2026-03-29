@@ -19,7 +19,7 @@ Usage: 'name: "{{- template "common.fullname" . -}}"'
 */ -}}
 {{- define "common.fullname"}}
   {{- $global := default (dict) .Values.global -}}
-  {{- $base := default (printf "%s-%s" .Release.Name .Chart.Name) .Values.fullnameOverride -}}
+  {{- $base := default (printf "%s-%s" .Release.Name (include "common.chart.name" .)) .Values.fullnameOverride -}}
   {{- $gpre := default "" $global.fullnamePrefix -}}
   {{- $pre := default "" .Values.fullnamePrefix -}}
   {{- $suf := default "" .Values.fullnameSuffix -}}

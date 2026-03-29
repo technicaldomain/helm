@@ -1,9 +1,10 @@
 {{- define "common.deployment.strategy.rollingUpdate" -}}
 type: RollingUpdate
 rollingUpdate:
-  maxSurge: 1
-  maxUnavailable: 1
+  maxSurge: {{ default "25%" ((.Values.rollingUpdate).maxSurge) }}
+  maxUnavailable: {{ default 0 ((.Values.rollingUpdate).maxUnavailable) }}
 {{- end -}}
 
 {{- define "common.deployment.strategy.recreate" -}}
+type: Recreate
 {{- end -}}

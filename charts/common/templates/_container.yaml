@@ -1,16 +1,29 @@
 {{- define "common.container.tpl" -}}
 {{- $fullname := include "common.fullname" . -}}
 {{- $config := default (dict) .Values.config -}}
-{{- $lifecycle := default (dict) .Values.lifecycle -}}
+{{- $lifecycle := default "" .Values.lifecycle -}}
 {{- $healthCheck := default (dict) .Values.healthCheck -}}
+{{- $configmap := default (dict) .Values.configmap -}}
+{{- $configmapEnabled := true -}}
+{{- if hasKey $configmap "enabled" -}}
+{{-   $configmapEnabled = $configmap.enabled -}}
+{{- end -}}
 name: app
-image: "{{ default "ghcr.io/technicaldomain" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+image: "{{ default "ghcr.io/technicaldomain" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag | default (include "common.chart.appVersion" .) }}"
 imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+{{- with .Values.command }}
+command:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.args }}
+args:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 ports:
-- name: {{ default "http" $config.applicationName }}
+- name: {{ default "http" $config.portName }}
   containerPort: {{ default "8080" $config.port }}
   protocol: TCP
-{{- if $lifecycle }}
+{{- if .Values.lifecycle }}
 {{- if eq $lifecycle "spa" }}
 lifecycle:
   preStop:
@@ -21,12 +34,36 @@ lifecycle:
       - quit
 {{- end }}
 {{- end }}
+{{- if or $configmapEnabled .Values.sharedConfigs .Values.sharedSecrets .Values.envFrom .Values.secretData }}
 envFrom:
-{{- $configmapTemplate := (print $.Template.BasePath "/configmap.yaml") }}
+{{- if .Values.envFrom }}
+  {{- toYaml .Values.envFrom | nindent 0 }}
+{{- else }}
+{{- if $configmapEnabled }}
   - configMapRef:
       name: {{ template "common.fullname" . }}
+{{- end }}
+{{- if .Values.secretData }}
+  - secretRef:
+      name: {{ template "common.fullname" . }}
+{{- end }}
   {{ include "common.envvar.shared.configs" . | indent 2 }}
   {{ include "common.envvar.shared.secrets" . | indent 2 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.env .Values.secretRefs }}
+env:
+  {{- if .Values.env }}
+  {{- toYaml .Values.env | nindent 2 }}
+  {{- end }}
+  {{- range $envName, $ref := .Values.secretRefs }}
+  - name: {{ $envName }}
+    valueFrom:
+      secretKeyRef:
+        name: {{ $ref.name }}
+        key: {{ $ref.key }}
+  {{- end }}
+{{- end }}
 {{- if eq $healthCheck.kind "tcp" }}
 {{ include "common.healthcheck.liveness.tcp" . }}
 {{ include "common.healthcheck.readiness.tcp" . }}
@@ -38,6 +75,10 @@ envFrom:
 {{ include "common.healthcheck.startup" . }}
 {{- end }}
 {{ include "common.resources" . }}
+{{- if .Values.volumeMounts }}
+volumeMounts:
+  {{- toYaml .Values.volumeMounts | nindent 2 }}
+{{- end }}
 {{- end -}}
 {{- define "common.container" -}}
 {{- /* clear new line so indentation works correctly */ -}}
