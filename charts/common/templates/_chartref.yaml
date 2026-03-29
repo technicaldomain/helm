@@ -1,4 +1,36 @@
 {{- /*
+Helpers for safe access to .Chart fields.
+In Helm 3, .Chart is a Go struct with uppercase fields (.Chart.Name);
+accessing lowercase (.Chart.name) causes a hard error.
+In Helm 4 and after JSON round-trip (deepCopy | toJson | fromJson),
+.Chart is a map — uppercase keys in Helm 4, lowercase in JSON round-trip.
+The map branch handles both by trying uppercase first, falling back to lowercase.
+*/ -}}
+{{- define "common.chart.name" -}}
+{{- if kindIs "map" .Chart -}}
+  {{- default .Chart.name .Chart.Name -}}
+{{- else -}}
+  {{- .Chart.Name -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "common.chart.version" -}}
+{{- if kindIs "map" .Chart -}}
+  {{- default .Chart.version .Chart.Version -}}
+{{- else -}}
+  {{- .Chart.Version -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "common.chart.appVersion" -}}
+{{- if kindIs "map" .Chart -}}
+  {{- default .Chart.appVersion .Chart.AppVersion -}}
+{{- else -}}
+  {{- .Chart.AppVersion -}}
+{{- end -}}
+{{- end -}}
+
+{{- /*
 common.chartref prints a chart name and version.
 
 It does minimal escaping for use in Kubernetes labels.
@@ -10,5 +42,5 @@ Example output:
 
 */ -}}
 {{- define "common.chartref" -}}
-  {{- replace "+" "_" .Chart.Version | printf "%s-%s" .Chart.Name -}}
+  {{- replace "+" "_" (include "common.chart.version" . | toString) | printf "%s-%s" (include "common.chart.name" . | toString) -}}
 {{- end -}}

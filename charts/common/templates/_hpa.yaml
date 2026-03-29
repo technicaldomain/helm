@@ -9,35 +9,32 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ template "common.fullname" . }}
-  minReplicas: {{ $hpa_config.minReplicas | default 1 $hpa_config.minReplicas }}
-  maxReplicas: {{ $hpa_config.maxReplicas | default 10 $hpa_config.maxReplicas }}
+  minReplicas: {{ $hpa_config.minReplicas | default 1 }}
+  maxReplicas: {{ $hpa_config.maxReplicas | default 10 }}
   metrics:
   {{- if $hpa_config.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
-         type: Utilization
-         averageUtilization: {{ $hpa_config.targetCPUUtilizationPercentage }}  
+          type: Utilization
+          averageUtilization: {{ $hpa_config.targetCPUUtilizationPercentage }}
   {{- end }}
   {{- if $hpa_config.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
-        name: memory  
+        name: memory
         target:
           type: Utilization
           averageUtilization: {{ $hpa_config.targetMemoryUtilizationPercentage }}
   {{- end }}
-  {{- if empty $hpa_config.targetCPUUtilizationPercentage }}
-    {{- if empty $hpa_config.targetMemoryUtilizationPercentage }}
-    metrics:
-    - resource:
+  {{- if and (not $hpa_config.targetCPUUtilizationPercentage) (not $hpa_config.targetMemoryUtilizationPercentage) }}
+    - type: Resource
+      resource:
         name: cpu
         target:
-          averageUtilization: 50
           type: Utilization
-      type: Resource 
-    {{- end }}
+          averageUtilization: 50
   {{- end }}
 {{- end -}}
 

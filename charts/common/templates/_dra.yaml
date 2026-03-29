@@ -1,0 +1,55 @@
+{{/*
+DRA (Dynamic Resource Allocation) helpers for GPU workloads.
+Uses the GA API (resource.k8s.io/v1) which requires a separate
+ResourceClaimTemplate object referenced by name.
+
+Values structure:
+  gpu:
+    count: 1
+    deviceClassName: gpu.nvidia.com
+*/}}
+
+{{/*
+ResourceClaimTemplate manifest.
+Render as a standalone template file in the consuming chart.
+*/}}
+{{- define "common.dra.resourceClaimTemplate" -}}
+{{- if .Values.gpu }}
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: {{ include "common.fullname" . }}-gpu
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu
+          exactly:
+            deviceClassName: {{ default "gpu.nvidia.com" .Values.gpu.deviceClassName }}
+            count: {{ default 1 .Values.gpu.count }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Pod-level resourceClaims block.
+Include at the same level as containers/volumes in pod spec.
+*/}}
+{{- define "common.dra.resourceClaims" -}}
+{{- if .Values.gpu }}
+resourceClaims:
+  - name: gpu
+    resourceClaimTemplateName: {{ include "common.fullname" . }}-gpu
+{{- end }}
+{{- end -}}
+
+{{/*
+Container-level resource claims reference.
+Include inside the container resources block.
+*/}}
+{{- define "common.dra.containerClaims" -}}
+{{- if .Values.gpu }}
+claims:
+  - name: gpu
+{{- end }}
+{{- end -}}

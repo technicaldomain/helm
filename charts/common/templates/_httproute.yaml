@@ -1,0 +1,40 @@
+{{- define "common.httproute.tpl" -}}
+{{- $gateway := default (dict) .Values.gateway -}}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+{{ template "common.metadata" . }}
+spec:
+  {{- if $gateway.parentRefs }}
+  parentRefs:
+    {{- toYaml $gateway.parentRefs | nindent 4 }}
+  {{- end }}
+  {{- if $gateway.hostnames }}
+  hostnames:
+    {{- toYaml $gateway.hostnames | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if $gateway.rules }}
+    {{- toYaml $gateway.rules | nindent 4 }}
+  {{- else }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ template "common.fullname" . }}
+          port: {{ (default (dict) .Values.service).port | default 80 }}
+  {{- end }}
+{{- end -}}
+
+{{- define "common.httproute" -}}
+{{- $top := first . -}}
+{{- $gateway := default (dict) $top.Values.gateway -}}
+{{- $gatewayEnabled := true -}}
+{{- if hasKey $gateway "enabled" -}}
+  {{- $gatewayEnabled = $gateway.enabled -}}
+{{- end -}}
+{{- if $gatewayEnabled }}
+{{- template "common.util.merge" (append . "common.httproute.tpl") -}}
+{{- end }}
+{{- end -}}

@@ -11,9 +11,7 @@ spec:
     port: {{ default "80" $service.port }}
     protocol: {{ default "TCP" $service.protocol }}
     targetPort: {{ default "8080" $config.port }}
-    # enable this for istio 1.6
-    # https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/
-    # appProtocol: {{ default "http" $service.protocol }}
+    appProtocol: {{ default "http" $service.appProtocol }}
   selector: {{- include "common.labels.selector" . | indent 4 -}}
 {{- end -}}
 {{- define "common.service" -}}

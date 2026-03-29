@@ -1,6 +1,7 @@
 {{- define "common.resources" -}}
 {{- $resources := .Values.resources -}}
 resources:
+  {{- include "common.dra.containerClaims" . | nindent 2 }}
   requests:
     memory: {{ default "640Mi" $resources.requests.memory }}
     cpu: {{ default "100m" $resources.requests.cpu }}

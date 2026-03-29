@@ -3,13 +3,13 @@ The kubelet uses liveness probes to know when to restart a container.
 */ -}}
 {{- define "common.healthcheck.liveness" -}}
 {{- $healthCheck := .Values.healthCheck -}}
-{{- $liveness := $healthCheck.liveness -}}
+{{- $liveness := default (dict) $healthCheck.liveness -}}
 {{- $config := default (dict) .Values.config -}}
 {{- $liveness_disabled := $liveness.disabled -}}
 {{- if ne $liveness_disabled true -}}
 livenessProbe:
   httpGet:
-    path: {{ default "" $config.contextPath}}/{{ default "" $liveness.path }}
+    path: {{ default "" $config.contextPath | trimSuffix "/" }}/{{ default (default "" $healthCheck.path) $liveness.path | trimPrefix "/" }}
     port: {{ default "8080" $config.port }}
   initialDelaySeconds: {{ default "180" $liveness.initialDelaySeconds }}
   timeoutSeconds: {{ default "2" $liveness.timeoutSeconds }}
@@ -20,7 +20,7 @@ livenessProbe:
 
 {{- define "common.healthcheck.liveness.tcp" -}}
 {{- $healthCheck := .Values.healthCheck -}}
-{{- $liveness := $healthCheck.liveness -}}
+{{- $liveness := default (dict) $healthCheck.liveness -}}
 {{- $config := default (dict) .Values.config -}}
 livenessProbe:
   tcpSocket:
@@ -39,13 +39,13 @@ from Service load balancers.
 */ -}}
 {{- define "common.healthcheck.readiness" -}}
 {{- $healthCheck := .Values.healthCheck -}}
-{{- $readiness := $healthCheck.readiness -}}
+{{- $readiness := default (dict) $healthCheck.readiness -}}
 {{- $config := default (dict) .Values.config -}}
 {{- $readiness_disabled := $readiness.disabled -}}
 {{- if ne $readiness_disabled true -}}
 readinessProbe:
   httpGet:
-    path: {{ default "" $config.contextPath}}/{{ default "" $readiness.path }}
+    path: {{ default "" $config.contextPath | trimSuffix "/" }}/{{ default (default "" $healthCheck.path) $readiness.path | trimPrefix "/" }}
     port: {{ default "8080" $config.port }}
   initialDelaySeconds: {{ default "40" $readiness.initialDelaySeconds }}
   timeoutSeconds: {{ default "2" $readiness.timeoutSeconds }}
@@ -56,7 +56,7 @@ readinessProbe:
 
 {{- define "common.healthcheck.readiness.tcp" -}}
 {{- $healthCheck := .Values.healthCheck -}}
-{{- $readiness := $healthCheck.readiness -}}
+{{- $readiness := default (dict) $healthCheck.readiness -}}
 {{- $config := default (dict) .Values.config -}}
 readinessProbe:
   tcpSocket:
@@ -75,13 +75,13 @@ it succeeds, making sure those probes don't interfere with the application start
 */ -}}
 {{- define "common.healthcheck.startup" -}}
 {{- $healthCheck := .Values.healthCheck -}}
-{{- $startup := $healthCheck.startup -}}
+{{- $startup := default (dict) $healthCheck.startup -}}
 {{- $config := default (dict) .Values.config -}}
 {{- $startup_disabled := $startup.disabled -}}
 {{- if ne $startup_disabled true -}}
 startupProbe:
   httpGet:
-    path: {{ default "" $config.contextPath}}/{{ default "" $startup.path }}
+    path: {{ default "" $config.contextPath | trimSuffix "/" }}/{{ default (default "" $healthCheck.path) $startup.path | trimPrefix "/" }}
     port: {{ default "8080" $config.port }}
   failureThreshold: {{ default "30" $startup.failureThreshold }}
   periodSeconds: {{ default "5" $startup.periodSeconds }}
@@ -89,7 +89,7 @@ startupProbe:
 {{- end -}}
 {{- define "common.healthcheck.startup.tcp" -}}
 {{- $healthCheck := .Values.healthCheck -}}
-{{- $startup := $healthCheck.startup -}}
+{{- $startup := default (dict) $healthCheck.startup -}}
 {{- $config := default (dict) .Values.config -}}
 startupProbe:
   tcpSocket:
