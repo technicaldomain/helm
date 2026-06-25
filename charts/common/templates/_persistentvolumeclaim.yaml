@@ -1,24 +1,63 @@
+{{- /*
+common.persistentvolumeclaim - PersistentVolumeClaim template
+
+Values:
+  persistence:
+    enabled: true
+    existingClaim: ""     # Use existing PVC instead of creating
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass: ""      # Empty = default, "-" = no class
+    annotations: {}
+
+Usage:
+  {{- include "common.persistentvolumeclaim" . -}}
+
+With overrides:
+  {{- include "common.persistentvolumeclaim" (list . "myapp.pvc") -}}
+  {{- define "myapp.pvc" -}}
+  spec:
+    accessModes:
+      - ReadWriteMany
+  {{- end -}}
+*/ -}}
 {{- define "common.persistentvolumeclaim.tpl" -}}
+{{- $p := default (dict) .Values.persistence -}}
+{{- if and $p.enabled (not $p.existingClaim) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 {{ template "common.metadata" . }}
+{{- with $p.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
 spec:
   accessModes:
-    - {{ .Values.persistence.accessMode | quote }}
+    - {{ default "ReadWriteOnce" $p.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.persistence.size | quote }}
-{{- if .Values.persistence.storageClass }}
-{{- if (eq "-" .Values.persistence.storageClass) }}
+      storage: {{ default "10Gi" $p.size }}
+{{- with $p.storageClass }}
+{{- if eq "-" . }}
   storageClassName: ""
 {{- else }}
-  storageClassName: "{{ .Values.persistence.storageClass }}"
+  storageClassName: {{ . }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
+
 {{- define "common.persistentvolumeclaim" -}}
-{{- $top := first . -}}
-{{- if and $top.Values.persistence.enabled (not $top.Values.persistence.existingClaim) -}}
-{{- template "common.util.merge" (append . "common.persistentvolumeclaim.tpl") -}}
+{{- $top := . -}}
+{{- if typeIs "[]interface {}" . -}}
+{{- $top = first . -}}
+{{- end -}}
+{{- $p := default (dict) $top.Values.persistence -}}
+{{- if and $p.enabled (not $p.existingClaim) -}}
+{{- if typeIs "[]interface {}" . -}}
+{{- include "common.util.merge" (append . "common.persistentvolumeclaim.tpl") -}}
+{{- else -}}
+{{- include "common.persistentvolumeclaim.tpl" . -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

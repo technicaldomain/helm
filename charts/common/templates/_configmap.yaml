@@ -1,26 +1,28 @@
+{{- /*
+common.configmap - Generic ConfigMap template
+
+Usage with merge (recommended):
+  {{- include "common.configmap" (list . "myapp.configmap") -}}
+  {{- define "myapp.configmap" -}}
+  data:
+    MY_KEY: "value"
+    ANOTHER_KEY: "another"
+  {{- end -}}
+
+Usage without merge (empty data):
+  {{- include "common.configmap" . -}}
+*/ -}}
 {{- define "common.configmap.tpl" -}}
----
 apiVersion: v1
 kind: ConfigMap
 {{ template "common.metadata" . }}
 data: {}
 {{- end -}}
-{{- define "common.configmap" -}}
-{{- template "common.util.merge" (append . "common.configmap.tpl") -}}
-{{- end -}}
 
-{{- define "common.configmap.spring.tpl" -}}
-{{- $config := default (dict) .Values.config -}}
-apiVersion: v1
-kind: ConfigMap
-{{ template "common.metadata" . }}
-data:
-  SPRING_APPLICATION_NAME: {{ template "common.fullname" . }}
-  SERVER_PORT: {{ default "8080" $config.port | quote}}
-  SPRING_PROFILES_ACTIVE: {{ default "prod" $config.springProfilesActive }}
-  SPRING_MAIN_ALLOW-BEAN-DEFINITION-OVERRIDING: {{ default "true" $config.springAllowBeanOverriding | quote}}
-  SERVER_SERVLET_CONTEXT-PATH: {{ default "/" $config.contextPath }}
+{{- define "common.configmap" -}}
+{{- if typeIs "[]interface {}" . -}}
+{{- include "common.util.merge" (append . "common.configmap.tpl") -}}
+{{- else -}}
+{{- include "common.configmap.tpl" . -}}
 {{- end -}}
-{{- define "common.configmap.spring" -}}
-{{- template "common.util.merge" (append . "common.configmap.spring.tpl") -}}
 {{- end -}}

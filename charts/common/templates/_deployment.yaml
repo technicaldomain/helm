@@ -38,6 +38,10 @@ spec:
       {{- end }}
       {{- end }}
       {{- include "common.dra.resourceClaims" . | nindent 6 }}
+      {{- with .Values.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       -
 {{ include "common.container.tpl" . | indent 8 }}
