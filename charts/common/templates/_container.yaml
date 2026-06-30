@@ -75,6 +75,7 @@ env:
 {{ include "common.healthcheck.startup" . }}
 {{- end }}
 {{ include "common.resources" . }}
+{{ include "common.security.containerContext" . }}
 {{- if .Values.volumeMounts }}
 volumeMounts:
   {{- toYaml .Values.volumeMounts | nindent 2 }}

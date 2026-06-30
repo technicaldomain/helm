@@ -1,4 +1,8 @@
-{{- define "common.security.context" -}}
+{{/*
+Pod-level security context - called at spec.securityContext
+*/}}
+
+{{- define "common.security.podContext" -}}
 {{- $context := default (dict) .Values.securityContext -}}
 {{- $runAsUser := ternary $context.runAsUser 1001 (hasKey $context "runAsUser") -}}
 {{- $runAsGroup := ternary $context.runAsGroup $runAsUser (hasKey $context "runAsGroup") -}}
@@ -9,4 +13,48 @@ securityContext:
   runAsGroup: {{ $runAsGroup }}
   fsGroup: {{ $fsGroup }}
   runAsNonRoot: {{ $runAsNonRoot }}
+  {{- if hasKey $context "seccompProfile" }}
+  seccompProfile:
+    type: {{ $context.seccompProfile.type }}
+  {{- end }}
 {{- end -}}
+ 
+{{- define "common.security.containerContext" -}}
+{{- $pod := default (dict) .Values.securityContext -}}
+{{- $ctr := default (dict) .Values.containerSecurityContext -}}
+ 
+{{/*
+  Cascade each field: use container value if explicitly set,
+  otherwise fall back to pod value, otherwise use secure default.
+*/}}
+{{- $runAsNonRoot := ternary $ctr.runAsNonRoot (ternary $pod.runAsNonRoot true (hasKey $pod "runAsNonRoot")) (hasKey $ctr "runAsNonRoot") -}}
+{{- $runAsUser    := ternary $ctr.runAsUser    (ternary $pod.runAsUser    1001 (hasKey $pod "runAsUser"))    (hasKey $ctr "runAsUser") -}}
+{{- $seccomp := ternary $ctr.seccompProfile (ternary $pod.seccompProfile nil (hasKey $pod "seccompProfile")) (hasKey $ctr "seccompProfile") -}}
+ 
+{{/*
+  Container-only fields — no pod-level equivalent to cascade from,
+  so fall back directly to CIS-compliant secure defaults.
+*/}}
+
+{{- $allowPrivEsc := ternary $ctr.allowPrivilegeEscalation false (hasKey $ctr "allowPrivilegeEscalation") -}}
+{{- $readOnlyRoot := ternary $ctr.readOnlyRootFilesystem   true  (hasKey $ctr "readOnlyRootFilesystem") -}}
+ 
+securityContext:
+  runAsNonRoot: {{ $runAsNonRoot }}
+  runAsUser: {{ $runAsUser }}
+  allowPrivilegeEscalation: {{ $allowPrivEsc }}
+  readOnlyRootFilesystem: {{ $readOnlyRoot }}
+  {{- if and .Values.containerSecurityContext (hasKey $ctr "capabilities") }}
+  capabilities:
+    {{- toYaml $ctr.capabilities | nindent 4 }}
+  {{- end }}
+  {{- if $seccomp }}
+  seccompProfile:
+    type: {{ $seccomp.type }}
+  {{- end }}
+{{- end -}}
+ 
+{{- define "common.security.context" -}}
+{{- include "common.security.podContext" . -}}
+{{- end -}}
+ 
