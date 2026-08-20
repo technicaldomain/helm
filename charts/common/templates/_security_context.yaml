@@ -9,4 +9,38 @@ securityContext:
   runAsGroup: {{ $runAsGroup }}
   fsGroup: {{ $fsGroup }}
   runAsNonRoot: {{ $runAsNonRoot }}
+{{- with $context.seccompProfile }}
+  seccompProfile:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end -}}
+
+{{- /*
+Container-level security context - rendered at containers[*].securityContext.
+Rendered only when `.Values.containerSecurityContext` is set. Each field falls
+back: container value -> pod-level value -> secure default.
+*/ -}}
+{{- define "common.security.containerContext" -}}
+{{- $pod := default (dict) .Values.securityContext -}}
+{{- $ctr := default (dict) .Values.containerSecurityContext -}}
+{{- if $ctr -}}
+{{- $runAsNonRoot := ternary $ctr.runAsNonRoot (ternary $pod.runAsNonRoot true (hasKey $pod "runAsNonRoot")) (hasKey $ctr "runAsNonRoot") -}}
+{{- $runAsUser := ternary $ctr.runAsUser (ternary $pod.runAsUser 1001 (hasKey $pod "runAsUser")) (hasKey $ctr "runAsUser") -}}
+{{- $allowPrivEsc := ternary $ctr.allowPrivilegeEscalation false (hasKey $ctr "allowPrivilegeEscalation") -}}
+{{- $readOnlyRoot := ternary $ctr.readOnlyRootFilesystem true (hasKey $ctr "readOnlyRootFilesystem") -}}
+{{- $seccomp := ternary $ctr.seccompProfile (ternary $pod.seccompProfile nil (hasKey $pod "seccompProfile")) (hasKey $ctr "seccompProfile") -}}
+securityContext:
+  runAsNonRoot: {{ $runAsNonRoot }}
+  runAsUser: {{ $runAsUser }}
+  allowPrivilegeEscalation: {{ $allowPrivEsc }}
+  readOnlyRootFilesystem: {{ $readOnlyRoot }}
+{{- if hasKey $ctr "capabilities" }}
+  capabilities:
+    {{- toYaml $ctr.capabilities | nindent 4 }}
+{{- end }}
+{{- if $seccomp }}
+  seccompProfile:
+    {{- toYaml $seccomp | nindent 4 }}
+{{- end }}
+{{- end -}}
 {{- end -}}
