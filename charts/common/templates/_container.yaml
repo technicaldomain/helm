@@ -11,6 +11,7 @@
 name: app
 image: "{{ default "ghcr.io/technicaldomain" .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag | default (include "common.chart.appVersion" .) }}"
 imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+{{ include "common.security.containerContext" . -}}
 {{- with .Values.command }}
 command:
   {{- toYaml . | nindent 2 }}
