@@ -11,6 +11,9 @@ livenessProbe:
   httpGet:
     path: {{ default "" $config.contextPath | trimSuffix "/" }}/{{ default (default "" $healthCheck.path) $liveness.path | trimPrefix "/" }}
     port: {{ default "8080" $config.port }}
+    {{- with default $healthCheck.scheme $liveness.scheme }}
+    scheme: {{ . }}
+    {{- end }}
   initialDelaySeconds: {{ default "180" $liveness.initialDelaySeconds }}
   timeoutSeconds: {{ default "2" $liveness.timeoutSeconds }}
   periodSeconds: {{ default "8" $liveness.periodSeconds }}
@@ -47,6 +50,9 @@ readinessProbe:
   httpGet:
     path: {{ default "" $config.contextPath | trimSuffix "/" }}/{{ default (default "" $healthCheck.path) $readiness.path | trimPrefix "/" }}
     port: {{ default "8080" $config.port }}
+    {{- with default $healthCheck.scheme $readiness.scheme }}
+    scheme: {{ . }}
+    {{- end }}
   initialDelaySeconds: {{ default "40" $readiness.initialDelaySeconds }}
   timeoutSeconds: {{ default "2" $readiness.timeoutSeconds }}
   periodSeconds: {{ default "3" $readiness.periodSeconds }}
@@ -83,6 +89,9 @@ startupProbe:
   httpGet:
     path: {{ default "" $config.contextPath | trimSuffix "/" }}/{{ default (default "" $healthCheck.path) $startup.path | trimPrefix "/" }}
     port: {{ default "8080" $config.port }}
+    {{- with default $healthCheck.scheme $startup.scheme }}
+    scheme: {{ . }}
+    {{- end }}
   failureThreshold: {{ default "30" $startup.failureThreshold }}
   periodSeconds: {{ default "5" $startup.periodSeconds }}
 {{- end -}}

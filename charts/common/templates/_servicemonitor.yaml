@@ -10,6 +10,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 {{ template "common.metadata" . }}
+{{- with $monitoring.labels }}
+    {{- toYaml . | nindent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels: {{- include "common.labels.selector" . | nindent 6 }}
@@ -17,6 +20,9 @@ spec:
     - interval: {{ default "60s" $monitoring.interval | quote }}
       targetPort: {{ default $config_port $monitoring.port | quote }}
       path: {{ default "/metrics" $monitoring.path | quote }}
+      {{- with $monitoring.endpoint }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 {{- end -}}
 {{- end -}}
 {{- define "common.serviceMonitor" -}}

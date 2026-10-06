@@ -21,3 +21,29 @@ affinity:
         topologyKey: {{ . }}
     {{- end }}
 {{- end -}}
+
+{{- /*
+common.topologySpread renders topologySpreadConstraints that keep the replicas of this
+release apart, one constraint per key in topologySpread.topologyKeys (nothing when empty).
+
+Values:
+  topologySpread:
+    topologyKeys: []                 # e.g. [topology.kubernetes.io/zone, kubernetes.io/hostname]
+    maxSkew: 1
+    whenUnsatisfiable: ScheduleAnyway  # or DoNotSchedule
+*/ -}}
+{{- define "common.topologySpread" -}}
+{{- $spread := .Values.topologySpread | default dict -}}
+{{- if $spread.topologyKeys }}
+topologySpreadConstraints:
+{{- range $spread.topologyKeys }}
+  - maxSkew: {{ default 1 $spread.maxSkew }}
+    topologyKey: {{ . }}
+    whenUnsatisfiable: {{ default "ScheduleAnyway" $spread.whenUnsatisfiable }}
+    labelSelector:
+      matchLabels: {{- include "common.labels.selector" $ | nindent 8 }}
+    matchLabelKeys:
+      - pod-template-hash
+{{- end }}
+{{- end }}
+{{- end -}}
