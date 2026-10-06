@@ -1,0 +1,41 @@
+{{- /*
+common.pdb - PodDisruptionBudget for the release's Deployment
+
+Values:
+  pdb:
+    enabled: false                    # Optional, defaults to false
+    maxUnavailable: 1                 # Used when minAvailable is not set (default 1)
+    minAvailable: 1                   # Optional, wins over maxUnavailable
+    unhealthyPodEvictionPolicy: ""    # IfHealthyBudget | AlwaysAllow (Kubernetes default when empty)
+
+Usage:
+  {{- template "common.pdb" (list . "myapp.pdb") -}}
+  {{- define "myapp.pdb" -}}
+  {{- end -}}
+*/ -}}
+{{- define "common.pdb.tpl" -}}
+{{- $pdb := default (dict) .Values.pdb -}}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+{{ template "common.metadata" . }}
+spec:
+  {{- if not (kindIs "invalid" $pdb.minAvailable) }}
+  minAvailable: {{ $pdb.minAvailable }}
+  {{- else }}
+  maxUnavailable: {{ default 1 $pdb.maxUnavailable }}
+  {{- end }}
+  {{- with $pdb.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.selector" . | nindent 6 }}
+{{- end -}}
+
+{{- define "common.pdb" -}}
+{{- $top := first . -}}
+{{- $pdb := default (dict) $top.Values.pdb -}}
+{{- if $pdb.enabled }}
+{{- template "common.util.merge" (append . "common.pdb.tpl") -}}
+{{- end }}
+{{- end -}}
