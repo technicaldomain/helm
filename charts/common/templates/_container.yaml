@@ -76,7 +76,7 @@ env:
 {{- end }}
 {{ include "common.resources" . }}
 {{- $persistence := .Values.persistence | default dict }}
-{{- if or .Values.volumeMounts (and $persistence.enabled $persistence.mountPath) }}
+{{- if or .Values.volumeMounts (and $persistence.enabled $persistence.mountPath) $configmap.mountPath }}
 volumeMounts:
   {{- with .Values.volumeMounts }}
   {{- toYaml . | nindent 2 }}
@@ -84,6 +84,11 @@ volumeMounts:
   {{- if and $persistence.enabled $persistence.mountPath }}
   - name: {{ default "data" $persistence.volumeName }}
     mountPath: {{ $persistence.mountPath }}
+  {{- end }}
+  {{- if $configmap.mountPath }}
+  - name: {{ default "config" $configmap.volumeName }}
+    mountPath: {{ $configmap.mountPath }}
+    readOnly: true
   {{- end }}
 {{- end }}
 {{- end -}}

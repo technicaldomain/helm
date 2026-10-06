@@ -6,6 +6,7 @@
 {{- $image := .Values.image | default dict -}}
 {{- $pullSecretsEnabled := $image.pullSecretsEnabled -}}
 {{- $persistence := .Values.persistence | default dict -}}
+{{- $configmap := .Values.configmap | default dict -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -69,7 +70,7 @@ spec:
       containers:
       -
 {{ include "common.container.tpl" . | indent 8 }}
-      {{- if or .Values.volumes (and $persistence.enabled $persistence.mountPath) }}
+      {{- if or .Values.volumes (and $persistence.enabled $persistence.mountPath) $configmap.mountPath }}
       volumes:
         {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
@@ -78,6 +79,11 @@ spec:
         - name: {{ default "data" $persistence.volumeName }}
           persistentVolumeClaim:
             claimName: {{ $persistence.existingClaim | default (include "common.fullname" .) }}
+        {{- end }}
+        {{- if $configmap.mountPath }}
+        - name: {{ default "config" $configmap.volumeName }}
+          configMap:
+            name: {{ template "common.fullname" . }}
         {{- end }}
       {{- end }}
 {{- end -}}

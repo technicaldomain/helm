@@ -68,6 +68,12 @@ persistence:
   mountPath: /var/lib/app             # adds the volume and the volumeMount
   volumeName: data                    # default "data"
 
+# The chart's ConfigMap (common.configmap, named like every resource) mounted as files
+configmap:
+  enabled: false                      # existing key: true also loads the ConfigMap as env (envFrom)
+  mountPath: /etc/app                 # adds the volume and a read-only volumeMount
+  volumeName: config                  # default "config"
+
 # PodDisruptionBudget (common.pdb)
 pdb:
   enabled: false
