@@ -76,7 +76,10 @@ spec:
 
 {{- define "common.service" -}}
 {{- if typeIs "[]interface {}" . -}}
+{{- $service := default (dict) (first .).Values.service -}}
+{{- if or (not (hasKey $service "enabled")) $service.enabled -}}
 {{- include "common.util.merge" (append . "common.service.tpl") -}}
+{{- end -}}
 {{- else -}}
 {{- include "common.service.tpl" . -}}
 {{- end -}}
