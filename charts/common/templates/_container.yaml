@@ -65,20 +65,26 @@ env:
         key: {{ $ref.key }}
   {{- end }}
 {{- end }}
-{{- if eq $healthCheck.kind "tcp" }}
-{{ include "common.healthcheck.liveness.tcp" . }}
-{{ include "common.healthcheck.readiness.tcp" . }}
-{{ include "common.healthcheck.startup.tcp" . }}
-{{- else if eq $healthCheck.kind "disabled" }}
-{{- else }}
-{{ include "common.healthcheck.liveness" . }}
-{{ include "common.healthcheck.readiness" . }}
-{{ include "common.healthcheck.startup" . }}
+{{- /* healthCheck.kind (http | tcp | disabled) applies to every probe; a probe's own `kind` wins. */ -}}
+{{- range $probe := list "liveness" "readiness" "startup" }}
+{{- $kind := default $healthCheck.kind (index $healthCheck $probe | default dict).kind }}
+{{- if eq $kind "tcp" }}
+{{ include (printf "common.healthcheck.%s.tcp" $probe) $ }}
+{{- else if ne $kind "disabled" }}
+{{ include (printf "common.healthcheck.%s" $probe) $ }}
+{{- end }}
 {{- end }}
 {{ include "common.resources" . }}
-{{- if .Values.volumeMounts }}
+{{- $persistence := .Values.persistence | default dict }}
+{{- if or .Values.volumeMounts (and $persistence.enabled $persistence.mountPath) }}
 volumeMounts:
-  {{- toYaml .Values.volumeMounts | nindent 2 }}
+  {{- with .Values.volumeMounts }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- if and $persistence.enabled $persistence.mountPath }}
+  - name: {{ default "data" $persistence.volumeName }}
+    mountPath: {{ $persistence.mountPath }}
+  {{- end }}
 {{- end }}
 {{- end -}}
 {{- define "common.container" -}}
