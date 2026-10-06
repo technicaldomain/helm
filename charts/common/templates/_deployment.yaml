@@ -5,6 +5,7 @@
 {{- $serviceAccountCreate := $serviceAccount.create | default false }}
 {{- $image := .Values.image | default dict -}}
 {{- $pullSecretsEnabled := $image.pullSecretsEnabled -}}
+{{- $persistence := .Values.persistence | default dict -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24,10 +25,33 @@ spec:
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       annotations: {{- include "common.annotations.deployment" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ template "common.serviceAccountName" . }}
+      {{- if hasKey .Values "automountServiceAccountToken" }}
+      automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
+      {{- end }}
+      {{- if hasKey .Values "enableServiceLinks" }}
+      enableServiceLinks: {{ .Values.enableServiceLinks }}
+      {{- end }}
+      {{- with .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- include "common.affinity" . | nindent 6 }}
+      {{- include "common.topologySpread" . | nindent 6 }}
       {{- include "common.tolerations" . | nindent 6 }}
       {{- include "common.security.context" . | nindent 6 }}
       {{- if $pullSecretsEnabled }}
@@ -45,9 +69,16 @@ spec:
       containers:
       -
 {{ include "common.container.tpl" . | indent 8 }}
-      {{- if .Values.volumes }}
+      {{- if or .Values.volumes (and $persistence.enabled $persistence.mountPath) }}
       volumes:
-        {{- toYaml .Values.volumes | nindent 8 }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if and $persistence.enabled $persistence.mountPath }}
+        - name: {{ default "data" $persistence.volumeName }}
+          persistentVolumeClaim:
+            claimName: {{ $persistence.existingClaim | default (include "common.fullname" .) }}
+        {{- end }}
       {{- end }}
 {{- end -}}
 {{- define "common.deployment" -}}
